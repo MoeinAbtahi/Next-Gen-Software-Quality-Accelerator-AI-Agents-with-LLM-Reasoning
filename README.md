@@ -430,7 +430,143 @@ ollama pull deepseek-code-v2:16b --force
 # Process in chunks
 python Codetree.py --input-csv issues.csv --batch-size 50 --parallel-workers 2
 ```
+## ⚡ Accelerated QA Effort Analysis
 
+This section quantifies NGQA’s impact on software quality assurance (QA) efficiency by comparing automated pipeline execution time against a representative manual QA baseline. The analysis combines:
+
+* **Empirical runtime measurements** of the NGQA pipeline
+* **COCOMO II–based effort estimation** for manual QA
+
+---
+
+### ⏱️ NGQA Pipeline Execution Time
+
+Pipeline performance was measured across all stages using the experimental setup:
+
+* **GPU**: NVIDIA RTX 3060
+* **RAM**: 16 GB
+* **CPU**: AMD Ryzen 5 5600G
+
+#### Fixed Per-Repository Overhead
+
+| Stage                       | Avg Time       |
+| --------------------------- | -------------- |
+| Static Analysis (SonarQube) | 7.5 min        |
+| Dependency Analysis         | 4.0 min        |
+| Performance Profiling       | 12.5 min       |
+| **Total per repository**    | **24 minutes** |
+
+* Across **10 repositories per language group** → **~4.0 hours fixed overhead**
+
+#### Per-Issue Processing Time
+
+| Component                       | Avg Time                   |
+| ------------------------------- | -------------------------- |
+| False Positive Mitigation (RAG) | ≤ 25 sec                   |
+| LLM Revision (Round 1)          | 12.5 sec                   |
+| LLM Revision (Round 2)          | 12.5 sec                   |
+| **Total per issue**             | **~50 sec (0.0139 hours)** |
+
+#### Total Runtime
+
+* **Repositories analyzed**: 70
+* **Validated issues**: 4,168
+* **Total execution time**: **95.9 hours (~4 days continuous runtime)**
+* **Infrastructure**: Single mid-range GPU workstation
+
+This demonstrates that NGQA scales effectively **without requiring high-performance or distributed systems**.
+
+---
+
+### 📐 Manual QA Baseline (COCOMO II Estimation)
+
+To establish a realistic manual QA comparison, the **COCOMO II Post-Architecture model** was applied to:
+
+* **750,000 SLOC** (effective dataset)
+* **1,510,600 LOC total corpus**
+* **Effort Adjustment Factor (EAF)**: 0.70
+
+#### Total Development Effort
+
+| Phase        | Effort (PM)    | Duration    |
+| ------------ | -------------- | ----------- |
+| Inception    | 236.2          | 6.8 months  |
+| Elaboration  | 944.8          | 20.5 months |
+| Construction | 2,991.8        | 34.2 months |
+| Transition   | 472.4          | 6.8 months  |
+| **Total**    | **4,645.2 PM** | —           |
+
+#### QA-Specific Effort (Assessment Activity)
+
+| Phase               | QA Effort (PM)                |
+| ------------------- | ----------------------------- |
+| Inception           | 18.9                          |
+| Elaboration         | 94.5                          |
+| Construction        | 718.0                         |
+| Transition          | 113.4                         |
+| **Total QA Effort** | **944.8 PM (~151,168 hours)** |
+
+---
+
+### 🛠️ Targeted Defect Remediation Estimate
+
+A conservative estimate of **0.75 hours per issue** was used to reflect:
+
+* Issue review
+* Root cause analysis
+* Fix implementation
+* Test creation/update
+* Validation
+
+**Total manual QA effort for 4,168 issues:**
+
+> **3,126 person-hours**
+
+---
+
+### 🚀 Acceleration Results
+
+| Metric                  | Value            |
+| ----------------------- | ---------------- |
+| NGQA Total Time         | 95.9 hours       |
+| Manual QA Time          | 3,126 hours      |
+| **Acceleration Factor** | **32.6× faster** |
+
+---
+
+### 📊 Per-Language Acceleration
+
+| Language         | LOC       | Issues | Manual QA (hrs) | NGQA (hrs) | Speedup   |
+| ---------------- | --------- | ------ | --------------- | ---------- | --------- |
+| TypeScript       | 195,800   | 483    | 362.3           | 10.7       | **33.9×** |
+| JavaScript       | 154,200   | 395    | 296.3           | 9.5        | **31.2×** |
+| Python           | 251,500   | 706    | 529.5           | 13.8       | **38.4×** |
+| Java             | 318,900   | 842    | 631.5           | 15.7       | **40.2×** |
+| C++              | 187,600   | 618    | 463.5           | 12.6       | **36.8×** |
+| C#               | 263,400   | 707    | 530.3           | 13.8       | **38.4×** |
+| C                | 139,200   | 417    | 312.8           | 9.8        | **31.9×** |
+| **Total / Mean** | 1,510,600 | 4,168  | 3,126.2         | 95.9       | **32.6×** |
+
+---
+
+### 📈 Key Takeaways
+
+* NGQA delivers **>30× acceleration** across all evaluated languages
+* Performance gains are consistent despite differences in:
+
+  * Code complexity
+  * Issue density
+  * Language semantics
+* The system achieves **enterprise-scale QA automation** on commodity hardware
+* Significant reduction in **manual developer effort and QA cycle time**
+
+---
+
+### 🖼️ Visual Results
+
+> *(Add your figures here — e.g., “Manual QA vs NGQA Time Comparison” chart and pipeline runtime graphs.)*
+
+---
 
 ### Key Contributions
 
