@@ -564,7 +564,9 @@ A conservative estimate of **0.75 hours per issue** was used to reflect:
 
 ### 🖼️ Visual Results
 
-> *(Add your figures here — e.g., “Manual QA vs NGQA Time Comparison” chart and pipeline runtime graphs.)*
+<img width="1079" height="472" alt="image" src="https://github.com/user-attachments/assets/9b2033ab-673f-4b24-a092-65c8418ed651" />
+
+<img width="1072" height="752" alt="image" src="https://github.com/user-attachments/assets/2fab9258-0449-4794-943a-adf0fdd53544" />
 
 ---
 
